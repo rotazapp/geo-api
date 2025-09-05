@@ -183,3 +183,34 @@ if (! function_exists('request')) {
         return is_null($value) ? value($default) : $value;
     }
 }
+
+if (! function_exists('download_extract')) {
+
+    function download_extract($file_url = null)
+    {
+        if (is_null($file_url)) {
+            return null;
+        }
+
+        $tempDir = sys_get_temp_dir();
+        $fileName = basename($file_url);
+        $zipPath = $tempDir . '/' . $fileName;
+
+        // Download the ZIP file
+        file_put_contents($zipPath, fopen($file_url, 'r'));
+
+        // Extract the ZIP file
+        $zip = new \ZipArchive();
+        if ($zip->open($zipPath) === TRUE) {
+            $zip->extractTo($tempDir);
+            $extractedFileName = $zip->getNameIndex(0); // Assumes only one file in ZIP
+            $zip->close();
+            if (file_exists($zipPath)) {
+                unlink($zipPath);
+            }
+            return $tempDir . '/' . $extractedFileName;
+        } else {
+            throw new \Exception('Failed to open ZIP file at ' . $zipPath);
+        }
+    }
+}

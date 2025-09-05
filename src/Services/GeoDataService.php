@@ -2,7 +2,6 @@
 
 namespace Rotaz\GeoData\Services;
 
-use Cassandra\Exception\ValidationException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -96,6 +95,142 @@ class GeoDataService
         ])->validate();
 
         return Arr::first($result);
+
+    }
+
+    public function load_cities($fileSource)
+    {
+        // Implementation for loading cities
+        Log::debug('Starting city data loading');
+
+        try {
+
+            $csvPath = download_extract($fileSource);
+
+            if (!file_exists($csvPath)) {
+
+                throw new \Exception('File not found after extraction');
+            }
+
+            $records = $this->createRecords($csvPath);
+
+            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
+
+            foreach ($records as $record) {
+
+                    try {
+
+                        $record['slug'] = str_clip( $record['nome'], slug: true ) . '-' . $record['uf'] ;
+
+                        GeoCity::create($record);
+
+                    } catch (\Exception $e) {
+                        Log::error('Error saving city record: ' . $e->getMessage());
+                    }
+
+            }
+
+            unlink($csvPath);
+
+            Log::debug('City data loading completed.');
+
+        } catch (\Exception $e) {
+            Log::error('Error loading city data: ' . $e->getMessage());
+        }
+
+    }
+    public function createRecords(string $csvPath): \Iterator
+    {
+        Log::debug('Creating records from CSV: ' . $csvPath);
+        $reader = \League\Csv\Reader::createFromPath($csvPath, 'r');
+        $reader->setHeaderOffset(0); // Assuming the first row contains headers
+        $header = $reader->getHeader(); // Get the header row
+        Log::debug('CSV Header: ' . implode(', ', $header));
+        return $reader->getRecords();
+
+    }
+
+    public function load_location($fileSource)
+    {
+        // Implementation for loading cities
+        Log::debug('Starting location data loading');
+
+        try {
+
+            $csvPath = download_extract($fileSource);
+
+            if (!file_exists($csvPath)) {
+
+                throw new \Exception('File not found after extraction');
+            }
+
+            $records = $this->createRecords($csvPath);
+
+            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
+
+            foreach ($records as $record) {
+
+                try {
+
+                    $record['slug'] = str_clip( $record['nome'], slug: true ) . '-' . $record['uf'] ;
+
+                    GeoLocation::create($record);
+
+                } catch (\Exception $e) {
+                    Log::error('Error saving city record: ' . $e->getMessage());
+                }
+
+            }
+
+            unlink($csvPath);
+
+            Log::debug('City data loading completed.');
+
+        } catch (\Exception $e) {
+            Log::error('Error loading city data: ' . $e->getMessage());
+        }
+
+    }
+
+    public function load_cities($fileSource)
+    {
+        // Implementation for loading cities
+        Log::debug('Starting cities data loading');
+
+        try {
+
+            $csvPath = download_extract($fileSource);
+
+            if (!file_exists($csvPath)) {
+
+                throw new \Exception('File not found after extraction');
+            }
+
+            $records = $this->createRecords($csvPath);
+
+            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
+
+            foreach ($records as $record) {
+
+                try {
+
+                    $record['slug'] = str_clip( $record['nome'], slug: true ) . '-' . $record['uf'] ;
+
+                    GeoLocation::create($record);
+
+                } catch (\Exception $e) {
+                    Log::error('Error saving city record: ' . $e->getMessage());
+                }
+
+            }
+
+            unlink($csvPath);
+
+            Log::debug('City data loading completed.');
+
+        } catch (\Exception $e) {
+            Log::error('Error loading city data: ' . $e->getMessage());
+        }
 
     }
 }

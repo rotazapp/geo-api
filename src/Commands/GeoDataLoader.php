@@ -5,6 +5,7 @@ namespace Rotaz\GeoData\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Rotaz\GeoData\Facades\GeoDataFacade;
 use Rotaz\GeoData\Models\GeoCity;
 use Rotaz\GeoData\Models\GeoLocation;
 use Rotaz\GeoData\Traits\WithDefaultData;
@@ -33,11 +34,8 @@ class GeoDataLoader extends Command
     {
         Log::debug('Starting city data loading');
 
-        $this->load_cities();
+       GeoDataFacade::load_cities(config('geo-data.data_source.cities.url') );
 
-        Log::debug('Starting location data loading');
-
-        $this->load_locations();
 
     }
 
@@ -50,20 +48,11 @@ class GeoDataLoader extends Command
 
             $fileSource = config('geo-data.data_source.cities.url');
 
-            if( str_contains($fileSource, 'sql' ) )
-            {
+            $records = $this->createDataFromSource($fileSource);
 
-                $this->storeFromSQL($fileSource);
+            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
 
-                return;
-
-            }else{
-
-                $records = $this->createDataFromSource($fileSource);
-
-                Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
-
-                foreach ($records as $record) {
+            foreach ($records as $record) {
 
                     try {
 
@@ -75,7 +64,7 @@ class GeoDataLoader extends Command
                     } catch (\Exception $e) {
                         Log::error('Failed to insert record: ' . json_encode($record) . ' Error: ' . $e->getMessage());
                     }
-                }
+
                 Log::debug('Records created total count: ' . iterator_count($records));
             }
 
@@ -95,20 +84,11 @@ class GeoDataLoader extends Command
 
             $fileSource = config('geo-data.data_source.locations.url');
 
-            if( str_contains($fileSource, 'sql' ) )
-            {
+            $records = $this->createDataFromSource($fileSource);
 
-                $this->storeFromSQL($fileSource);
+            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
 
-                return;
-
-            }else{
-
-                $records = $this->createDataFromSource($fileSource);
-
-                Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
-
-                foreach ($records as $record) {
+            foreach ($records as $record) {
 
                     try {
 
@@ -123,7 +103,7 @@ class GeoDataLoader extends Command
                 }
 
                 Log::debug('Records created total count: ' . iterator_count($records));
-            }
+
 
         }catch (\Exception $e) {
             Log::error('Failed to loading data ' . $e->getMessage());
@@ -145,6 +125,10 @@ class GeoDataLoader extends Command
             throw new \Exception('File not found after extraction');
         }
 
-        return $this->createRecords($csvPath);
+        $records = $this->createRecords($csvPath);
+
+        //unlink($csvPath);
+
+        return $records;
     }
 }

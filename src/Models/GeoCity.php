@@ -7,7 +7,23 @@ use Rotaz\GeoData\Traits\WithDefaultData;
 
 class GeoCity extends Model
 {
-
+    protected $fillable = [
+        'id',
+        'id6',
+        'tse',
+        'rf',
+        'bcb',
+        'ddd',
+        'slug',
+        'municipio',
+        'uf',
+        'regiao',
+        'meso_regiao',
+        'microregiao',
+        'regiao_imediata',
+        'regiao_intermediaria',
+        'regiao_saude',
+    ];
 
     protected $table = 'geo_cities';
 
@@ -15,6 +31,6 @@ class GeoCity extends Model
 
     public function creatSlug(): void
     {
-        $this->slug  = str_clip( $this->nome, slug: true ) . '-' . $this->uf ;
+        $this->slug  = str_clip( $this->municipio, slug: true ) . '-' . $this->uf ;
     }
 }

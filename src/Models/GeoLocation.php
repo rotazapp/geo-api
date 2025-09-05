@@ -9,17 +9,16 @@ class GeoLocation extends Model
 {
 
     protected $table = 'geo_location';
+    protected $primaryKey = 'cep';
+    protected $keyType = 'string';
 
     protected $fillable = [
         'cep',
-        'logradouro',
-        'localidade',
-        'municipio',
         'slug',
+        'logradouro',
+        'bairro',
+        'municipio',
         'uf',
-        'ibge',
-        'geo',
-        'estabelecimentos',
     ];
 
     public $timestamps = true;

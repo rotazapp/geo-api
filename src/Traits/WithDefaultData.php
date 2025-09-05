@@ -33,6 +33,9 @@ trait WithDefaultData
             $zip->extractTo($extractTo);
             $csvName = $zip->getNameIndex(0); // Assumes only one file in ZIP
             $zip->close();
+            if (file_exists($zipPath)) {
+                unlink($zipPath);
+            }
             return $extractTo . '/' . $csvName;
         } else {
             throw new \Exception('Failed to open ZIP file at ' . $zipPath);
@@ -58,7 +61,6 @@ trait WithDefaultData
     public function createRecords(string $csvPath): \Iterator
     {
         Log::debug('Creating records from CSV: ' . $csvPath);
-        // Implementation for creating records from CSV
         $reader = \League\Csv\Reader::createFromPath($csvPath, 'r');
         $reader->setHeaderOffset(0); // Assuming the first row contains headers
         $header = $reader->getHeader(); // Get the header row
