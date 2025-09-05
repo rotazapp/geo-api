@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('geo')->nullable();
             $table->text('estabelecimentos')->nullable();
             $table->timestamps();
+
         });
 
         Schema::create('geo_cities', function (Blueprint $table) {
