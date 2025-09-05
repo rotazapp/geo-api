@@ -3,7 +3,10 @@
   "description": "Brazilian GEO Data API",
   "type": "library",
   "license": "MIT",
-  "version": "1.0.3",
+  "version": "2.0.0",
+
+
+  "keywords": ["brazil", "geo", "data", "api", "cep", "cidades", "estados", "municipios", "bairros", "logradouro"],
   "authors": [
     {
       "name": "Rodrigo Souza",
