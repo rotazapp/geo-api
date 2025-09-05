@@ -1,0 +1,45 @@
+{
+  "name": "rotaz/geo-api",
+  "description": "Brazilian GEO Data API",
+  "type": "library",
+  "license": "MIT",
+  "version": "1.0.3",
+  "authors": [
+    {
+      "name": "Rodrigo Souza",
+      "email": "rotazapp@gmail.com",
+      "homepage": "https://rotaz.app.br",
+      "role": "Developer"
+    }],
+  "require": {
+    "php": "^8.2",
+    "illuminate/bus": "^10.2|^11.0|^12.0",
+    "illuminate/conditionable": "^10.2|^11.0|^12.0",
+    "illuminate/console": "^10.2|^11.0|^12.0",
+    "illuminate/support":  "^10.2|^11.0|^12.0",
+    "illuminate/database": "^10.2|^11.0|^12.0",
+    "illuminate/pipeline": "^10.2|^11.0|^12.0",
+    "spatie/laravel-package-tools": "^1.16.1",
+    "league/csv": "^9.24"
+  },
+  "autoload": {
+    "psr-4": {
+      "Rotaz\\GeoData\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Rotaz\\GeoData\\Providers\\GeoDataServiceProvider"
+      ],
+        "aliases": {
+            "GeoData": "Rotaz\\GeoData\\Facades\\GeoDataFacade"
+        }
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

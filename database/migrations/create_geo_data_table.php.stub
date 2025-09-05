@@ -1,0 +1,71 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('geo_location', function (Blueprint $table) {
+            $table->id();
+            $table->string('cep', 8)->unique();
+            $table->string('logradouro')->nullable();
+            $table->string('localidade')->nullable();
+            $table->string('municipio')->nullable();
+            $table->string('slug')->nullable()->index();
+            $table->string('uf', 2)->nullable()->index();
+            $table->string('ibge')->nullable();
+            $table->string('geo')->nullable();
+            $table->string('estabelecimentos')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('geo_cities', function (Blueprint $table) {
+            $table->id();
+            $table->string('id_municipio_6')->unique();
+            $table->string('id_municipio_tse')->nullable();
+            $table->string('id_municipio_rf')->nullable();
+            $table->string('id_municipio_bcb')->nullable();
+            $table->string('nome')->nullable();
+            $table->string('slug')->nullable();
+            $table->boolean('capital_uf')->default(false);
+            $table->string('id_comarca')->nullable();
+            $table->string('id_regiao_saude')->nullable();
+            $table->string('nome_regiao_saude')->nullable();
+            $table->string('id_regiao_imediata')->nullable();
+            $table->string('nome_regiao_imediata')->nullable();
+            $table->string('id_regiao_intermediaria')->nullable();
+            $table->string('nome_regiao_intermediaria')->nullable();
+            $table->string('id_microrregiao')->nullable();
+            $table->string('nome_microrregiao')->nullable();
+            $table->string('id_mesorregiao')->nullable();
+            $table->string('nome_mesorregiao')->nullable();
+            $table->string('id_regiao_metropolitana')->nullable();
+            $table->string('nome_regiao_metropolitana')->nullable();
+            $table->string('ddd')->nullable();
+            $table->string('id_uf')->nullable();
+            $table->string('uf')->nullable();
+            $table->string('nome_uf')->nullable();
+            $table->string('nome_regiao')->nullable();
+            $table->boolean('amazonia_legal')->default(false);
+            $table->string('centroide')->nullable();
+
+
+            $table->timestamps();
+        });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('geo_data');
+    }
+};

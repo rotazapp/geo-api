@@ -1,0 +1,4 @@
+*.sqlite*
+seeders/csv/*
+seeders/sql/*
+
