@@ -32,9 +32,13 @@ class GeoDataLoader extends Command
      */
     public function handle()
     {
-        Log::debug('Starting city data loading');
+        Log::debug('Starting geo data loading');
 
-       GeoDataFacade::load_cities(config('geo-data.data_source.cities.url') );
+
+        $this->load_cities();
+        $this->load_locations();
+
+
 
 
     }
@@ -42,31 +46,13 @@ class GeoDataLoader extends Command
     protected function load_cities()
     {
         // Implementation for loading cities
-        Log::debug('Starting city data loading');
+        Log::debug('Starting cities data loading');
 
         try {
 
             $fileSource = config('geo-data.data_source.cities.url');
 
-            $records = $this->createDataFromSource($fileSource);
-
-            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
-
-            foreach ($records as $record) {
-
-                    try {
-
-                        $geoCity = new GeoCity($record);
-                        $geoCity->creatSlug();
-                        $geoCity->save();
-
-
-                    } catch (\Exception $e) {
-                        Log::error('Failed to insert record: ' . json_encode($record) . ' Error: ' . $e->getMessage());
-                    }
-
-                Log::debug('Records created total count: ' . iterator_count($records));
-            }
+            GeoDataFacade::load_cities($fileSource);
 
         }catch (\Exception $e) {
             Log::error('Failed to loading data ' . $e->getMessage());
@@ -77,58 +63,16 @@ class GeoDataLoader extends Command
 
     protected function load_locations()
     {
-        // Implementation for loading cities
-        Log::debug('Starting location data loading');
-
         try {
 
             $fileSource = config('geo-data.data_source.locations.url');
 
-            $records = $this->createDataFromSource($fileSource);
-
-            Log::debug('Data loaded from source: ' . iterator_count($records) . ' records found.');
-
-            foreach ($records as $record) {
-
-                    try {
-
-                        $geoCity = new GeoLocation($record);
-                        $geoCity->creatSlug();
-                        $geoCity->save();
-
-
-                    } catch (\Exception $e) {
-                        Log::error('Failed to insert record: ' . json_encode($record) . ' Error: ' . $e->getMessage());
-                    }
-                }
-
-                Log::debug('Records created total count: ' . iterator_count($records));
-
+            GeoDataFacade::load_locations($fileSource);
 
         }catch (\Exception $e) {
             Log::error('Failed to loading data ' . $e->getMessage());
 
         }
-
-
     }
 
-    protected function createDataFromSource($url)
-    {
-        // Implementation for creating data from source
-        Log::debug('Creating data from source ' . $url);
-
-        $csvPath = $this->downloadAndExtractZip($url);
-
-        if (!file_exists($csvPath)) {
-
-            throw new \Exception('File not found after extraction');
-        }
-
-        $records = $this->createRecords($csvPath);
-
-        //unlink($csvPath);
-
-        return $records;
-    }
 }
