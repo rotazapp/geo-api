@@ -34,12 +34,8 @@ class GeoDataLoader extends Command
     {
         Log::debug('Starting geo data loading');
 
-
         $this->load_cities();
         $this->load_locations();
-
-
-
 
     }
 

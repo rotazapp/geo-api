@@ -33,7 +33,7 @@ class GeoDataController
         try {
 
             $geoLocation = GeoDataFacade::searchByCep($cep);
-            return response()->json(new GeoLocationResource($geoLocation));
+            return response()->json($geoLocation);
 
         }catch (\Throwable  $e){
 

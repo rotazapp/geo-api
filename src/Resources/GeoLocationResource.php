@@ -19,10 +19,9 @@ class GeoLocationResource extends JsonResource
             'cep' => $this->cep,
             'logradouro' => mb_strtoupper($this->logradouro),
             'municipio' => mb_strtoupper($this->municipio),
-            'localidade' => mb_strtoupper($this->localidade),
-            'uf' => $this->uf,
-            'ibge' => $this->ibge,
-            'geo' => $this->geo,
+            'bairro' => mb_strtoupper($this->bairro),
+            'uf' => mb_strtoupper($this->uf),
+            'slug' => $this->slug,
         ];
     }
 }
